@@ -2,6 +2,23 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const http = require('http');
 const cors = require('cors');
+const Sequelize = require('sequelize');
+const LocalStorage = require('node-localstorage').LocalStorage;
+localStorage = new LocalStorage('./storage')
+
+const sequelize = new Sequelize('todos', 'postgres', '123456789', {
+    host: 'localhost',
+    dialect: 'postgres'
+});  
+
+const ToDo = sequelize.define('todos', {
+  title: {
+      type: Sequelize.STRING
+  },
+  description: {
+      type: Sequelize.STRING
+  }
+});
 
 const app = express();
 
@@ -82,6 +99,72 @@ app.post('/reverseArray', (req, res) => {
     console.log(req.body.array);
     console.log(`reverse = ${result}`);
     res.status(200).json({result})
+});
+
+function load_data(arr)
+{
+    if (!localStorage.getItem("text"))
+        return;
+    let save = localStorage.getItem("text").split(',');
+    save.forEach(i => arr.push(i));
+}
+let arr = [];
+load_data(arr);
+
+app.post('/strings', (req, res) => {
+    arr.push(req.body.text);
+    localStorage.setItem('text', arr);
+    res.status(200).json({ message: "OK" })
+})
+app.get('/strings', (req, res) => {
+    res.status(200).json({ message: arr })
+})
+app.get('/strings/:index', (req, res) => {
+    res.status(200).json({ message: arr[req.query.index] })
+})
+app.delete('/strings', (req, res) => {
+    arr.splice(0, arr.length)
+    localStorage.removeItem('text');
+    console.log(arr);
+    res.status(200).json({ message: "OK" })
+})
+app.delete('/strings/:index', (req, res) => {
+    arr.splice(req.query.index, 1);
+    localStorage.setItem("text", arr);
+    res.status(200).json({ message: arr })
+})
+
+// CRUD for ToDo
+app.get("/todo", (req, res) => {
+    ToDo.findAll().then(todo=>{
+      res.status(200).json({ message: "OK" })
+    }).catch(err => console.log(err));
+});
+ 
+app.post("/todo", (req, res) => {
+    if(!req.body) return res.sendStatus(400);
+    ToDo.create({ 
+        title: req.body.title, 
+        description: req.body.description
+    }).then(todo=>{
+        res.status(200).json({ message: "OK" })
+      }).catch(err => console.log(err));
+});
+
+app.put("/todo",(req, res) => {    
+    if(!req.body) return res.sendStatus(400);
+    ToDo.update({
+        title: req.body.title, 
+        description: req.body.description
+    }).then(todo=>{
+        res.status(200).json({ message: "OK" })
+      }).catch(err => console.log(err));
+  });
+
+app.delete("/todo", function(req, res){  
+  ToDo.destroy().then(todo=>{
+    res.status(200).json({ message: "OK" })
+  }).catch(err => console.log(err));
 });
 
 http.createServer(app).listen(3000, () => {
