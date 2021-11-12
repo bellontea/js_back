@@ -44,7 +44,7 @@ const requireToken = async (req, res, next) => {
         throw new ErrorResponse('Token does not exist', 404);
     }
 
-    req.token = token;
+    req.userId = tokenFromDB.userId
     next();
 };
 
@@ -53,4 +53,5 @@ module.exports = {
     syncHandler,
     notFound,
     errorHandler,
+    requireToken,
 };

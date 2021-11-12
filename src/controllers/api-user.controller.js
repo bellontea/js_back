@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const ErrorResponse = require('../classes/error-response');
-const ToDo = require('../dataBase/models/ToDo.model.');
+const User = require('../dataBase/models/User.model');
 const { asyncHandler, requireToken } = require('../middlewares/middlewares');
 
 const router = Router();

@@ -12,7 +12,7 @@ function initRoutes() {
     router.post('/login', asyncHandler(login));
 }
 
-async function registartion(req, res, next) {
+async function registration(req, res, next) {
     const checkLogin = await User.findOne({
         where: {
             login: req.body.login,
@@ -53,7 +53,7 @@ async function login(req, res, next) {
     }
 
     const token = await Token.create({
-        userId: existingUser.id,
+        userId: userByLogin.id,
         value: nanoid(128)
     });
 
