@@ -6,7 +6,7 @@ const sequelize = new Sequelize({
   port: 5432,
   dialect: 'postgres',
   database: 'todos',
-  username: 'user1',
+  username: 'root',
   password: 'qwerty',
   models: [__dirname + '/models/*.model.*'],
 });

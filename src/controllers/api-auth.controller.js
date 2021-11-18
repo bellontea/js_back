@@ -25,10 +25,10 @@ async function registration(req, res, next) {
     });
 
     if (checkLogin) {
-        throw new ErrorResponse('User with this login already exists', 404);
+        throw new ErrorResponse('This login already in use', 400);
     }
     if (checkEmail) {
-        throw new ErrorResponse('User with this email already exists', 404);
+        throw new ErrorResponse('This email already in use', 400);
     }
 
     await User.create(req.body);
@@ -37,23 +37,19 @@ async function registration(req, res, next) {
 }
 
 async function login(req, res, next) {
-    const userByLogin = await User.findOne({
+    const user = await User.findOne({
         where: {
             login: req.body.login,
             password: req.body.password,
         }
     });
 
-    if (!userByLogin) {
-        throw new ErrorResponse('Wrong login or password', 404);
-    }
-
-    if (await Token.findOne({ where:{id: userByLogin.id} })){
-        throw new ErrorResponse("Token error", 404);
+    if (!user) {
+        throw new ErrorResponse('Wrong login or password', 400);
     }
 
     const token = await Token.create({
-        userId: userByLogin.id,
+        userId: user.id,
         value: nanoid(128)
     });
 

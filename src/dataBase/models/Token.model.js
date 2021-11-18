@@ -10,10 +10,6 @@ Token.init(
             primaryKey: true,
             defaultValue: Sequelize.DataTypes.UUIDV4
         },
-        userId: {
-            type: Sequelize.DataTypes.UUID,
-            defaultValue: Sequelize.DataTypes.UUIDV4,
-        },
         value: {
             type: Sequelize.STRING,
             defaultValue: "Token"

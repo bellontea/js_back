@@ -22,6 +22,14 @@ ToDo.init(
             type: Sequelize.BOOLEAN,
             defaultValue: false,
         },
+        isFavourite: {
+            type: Sequelize.DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        priority: {
+          type: Sequelize.DataTypes.INTEGER,
+          defaultValue: 1,
+        },
     },
     { sequelize: sequelize, underscored: true, modelName: 'todo' }
 );

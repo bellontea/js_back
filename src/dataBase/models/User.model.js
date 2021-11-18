@@ -26,7 +26,7 @@ User.init(
         },
         name: {
             type: Sequelize.STRING,
-            allowNull: false,
+            defaultValue: "Name",
         },
     },
     { sequelize: sequelize, underscored: true, modelName: 'user' }

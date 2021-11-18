@@ -31,7 +31,7 @@ const requireToken = async (req, res, next) => {
     const token = req.header('x-access-token');
 
     if (!token) {
-        throw new ErrorResponse('No token', 404);
+        throw new ErrorResponse('No token sent', 401);
     }
 
     const tokenFromDB = await Token.findOne({
@@ -41,7 +41,7 @@ const requireToken = async (req, res, next) => {
     })
 
     if (!tokenFromDB) {
-        throw new ErrorResponse('Token does not exist', 404);
+        throw new ErrorResponse('Wrong token', 400);
     }
 
     req.userId = tokenFromDB.userId
